@@ -1,4 +1,6 @@
 class SessionController < ApplicationController
+  skip_before_action :login_required
+
   def new
   end
 
@@ -13,9 +15,15 @@ class SessionController < ApplicationController
     end
   end
 
+  def destroy
+    reset_session
+    redirect_to root_url, notice: 'ログアウトしました'
+  end
+  
+
   private
 
   def session_params
-    params,require(:session).permit(:email, :password)
+    params.require(:session).permit(:email, :password)
   end
 end
