@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 class SessionController < ApplicationController
   skip_before_action :login_required
 
-  def new
-  end
+  def new; end
 
   def create
     user = User.find_by(email: session_params[:email])
@@ -19,7 +20,6 @@ class SessionController < ApplicationController
     reset_session
     redirect_to root_url, notice: 'ログアウトしました'
   end
-  
 
   private
 

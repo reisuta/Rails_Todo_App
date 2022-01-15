@@ -1,57 +1,59 @@
-class Admin::UsersController < ApplicationController
-  before_action :require_admin
+# frozen_string_literal: true
 
-  def new
-    @user = User.new
-  end
+module Admin
+  class UsersController < ApplicationController
+    before_action :require_admin
 
-  def create
-    @user = User.ner(user_params)
+    def new
+      @user = User.new
+    end
 
-    if @user.save
-      redirect_to admin_user_url(@user), notice: "ユーザー「#{@user.name}」を登録しました"
-    else
-      render :new
+    def create
+      @user = User.ner(user_params)
+
+      if @user.save
+        redirect_to admin_user_url(@user), notice: "ユーザー「#{@user.name}」を登録しました"
+      else
+        render :new
+      end
+    end
+
+    def update
+      @user = User.find(params[:id])
+
+      if @user.update(user_params)
+        redirect_to admin_user_url(@user), notice: "ユーザー「#{@user.name}」を更新しました"
+      else
+        render :edit
+      end
+    end
+
+    def destroy
+      @user = User.find(params[:id])
+      @user.destroy
+      redirect_to admin_user_url, notice: "ユーザー「#{@user.name}」を削除しました"
+    end
+
+    def edit
+      @user = User.find(params[:id])
+    end
+
+    def show
+      @user = User.find(params[:id])
+    end
+
+    def index
+      @users = User.all
+    end
+
+    private
+
+    def user_params
+      params.require(:user).permit(:name, :email, :admin, :password, :password_confirmation)
+    end
+
+    def require_admin
+      redirect_to root_url unless current_user.admin?
     end
   end
-
-  def update
-    @user = User.find(params[:id])
-
-    if @user.update(user_params)
-      redirect_to admin_user_url(@user), notice: "ユーザー「#{@user.name}」を更新しました"
-    else
-      render :edit
-    end
-  end
-
-  def destroy
-    @user = User.find(params[:id])
-    @user.destroy
-    redirect_to admin_user_url, notice: "ユーザー「#{@user.name}」を削除しました"
-  end
-
-
-  def edit
-    @user = User.find(params[:id])
-  end
-
-  def show
-    @user = User.find(params[:id])
-  end
-
-  def index
-    @users = User.all
-  end
-
-  private
-
-  def user_params
-    params.require(:user).permit(:name, :email, :admin, :password, :password_confirmation)
-  end
-
-  def require_admin
-    redirect_to root_url unless current_user.admin?
-  end
-
 end

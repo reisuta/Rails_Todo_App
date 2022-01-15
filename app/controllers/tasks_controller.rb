@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class TasksController < ApplicationController
-  before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :set_task, only: %i[show edit update destroy]
 
   def index
     @q = current_user.tasks.ransack(params[:q])
@@ -11,8 +13,7 @@ class TasksController < ApplicationController
     end
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @task = Task.new
@@ -27,23 +28,23 @@ class TasksController < ApplicationController
 
     if @task.save
       TaskMailer.creation_email(@task).deliver_now
+      SampleJob.perform_later
       redirect_to @task, notice: "タスク「#{@task.name}」を登録しました"
     else
       render :new
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     @task.update(task_params)
     redirect_to tasks_path, notice: "タスク「#{@task.name}」を更新しました。"
   end
 
-  def destroy  
+  def destroy
     @task.destroy
-    redirect_to tasks_path, notice: "タスク#{@task.name}を削除しました"
+    head :no_content
   end
 
   def confirm_new
@@ -53,15 +54,16 @@ class TasksController < ApplicationController
 
   def import
     current_user.tasks.import(params[:file])
-    redirect_to tasks_url, notice: "タスクを追加しました"
+    redirect_to tasks_url, notice: 'タスクを追加しました'
   end
 
   private
-    def task_params
-      params.require(:task).permit(:name,:description, :image)
-    end
 
-    def set_task
-      @task = current_user.tasks.find(params[:id])
-    end
+  def task_params
+    params.require(:task).permit(:name, :description, :image)
+  end
+
+  def set_task
+    @task = current_user.tasks.find(params[:id])
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe 'タスク管理機能', type: :system do
@@ -5,7 +7,7 @@ describe 'タスク管理機能', type: :system do
   let(:user_b) { FactoryBot.create(:user, name: 'ユーザB', email: 'b@example.com') }
   let!(:task_a) { FactoryBot.create(:task, name: '最初のタスク', user: user_a) }
 
-  before do 
+  before do
     visit login_path
     fill_in 'メールアドレス', with: login_user.email
     fill_in 'パスワード', with: login_user.password
@@ -72,5 +74,3 @@ describe 'タスク管理機能', type: :system do
     end
   end
 end
-
-

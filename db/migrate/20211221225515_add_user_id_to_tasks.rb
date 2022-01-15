@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUserIdToTasks < ActiveRecord::Migration[6.1]
   def up
     execute 'DELETE FROM tasks;'
@@ -7,5 +9,4 @@ class AddUserIdToTasks < ActiveRecord::Migration[6.1]
   def down
     remove_reference :tasks, :user, index: true
   end
-
 end

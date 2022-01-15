@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :task do
     name { 'テストを書く' }
@@ -5,4 +7,3 @@ FactoryBot.define do
     user
   end
 end
-
